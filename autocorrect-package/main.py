@@ -2,9 +2,12 @@ import os
 
 """
 Autocorrect for packages.
+Inspired by apt.
 
 Patches
 28.9.2025.create - Create the script
+21.10.2025.edit.minor - adopt for use with car
+26.10.2025.edit.minor - adopt to use for multiple funcs
 """
 
 def levenshtein_distance(a, b):
@@ -31,9 +34,9 @@ def find_best_match(requested_name, packages):
     return best_match
 
 def main(package):
-    os.system("curl -s -L -o pkgs https://raw.githubusercontent.com/crust-project/car/refs/heads/main/existing-packages.txt")
-    with open("pkgs", "r") as f:
+    with open("/home/"+os.getlogin()+"/.config/car/packagelist", "r") as f:
         pkgs = f.read().splitlines()
-    os.remove("pkgs")
     install = find_best_match(package, pkgs)
-    print("Note: Installing " + install + " instead of " + package)
+    if install != package:
+        print("Note: Using " + install + " instead of " + package)
+    return install
